@@ -2,25 +2,28 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from db import get_db
-from auth.schemas import LoginRequest, TokenResponse, UserInfo
-from auth.service import authenticate_user
-
-router = APIRouter()
+from auth.schemas import LoginRequest, LoginResponse
+from auth.service import authenticate_user, create_access_token
 
 
-@router.post("/login", response_model=TokenResponse)
-def login(payload: LoginRequest, db: Session = Depends(get_db)):
-    user = authenticate_user(db, payload.email, payload.password)
+router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+
+@router.post("/login", response_model=LoginResponse)
+def login(data: LoginRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(db, data.email, data.password)
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
 
-    return {
-        "access_token": user["access_token"],
-        "token_type": "bearer"
-    }
+    token = create_access_token({
+        "identity_id": user["identity_id"],
+        "party_id": user["party_id"],
+        "role_code": user["role_code"],
+    })
 
-
-@router.get("/me", response_model=UserInfo)
-def get_me(db: Session = Depends(get_db)):
-    # позже добавим декодирование токена
-    return {"detail": "Not implemented"}
+    return LoginResponse(
+        access_token=token,
+        party_id=user["party_id"],
+        identity_id=user["identity_id"],
+        role_code=user["role_code"],
+    )

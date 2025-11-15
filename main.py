@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends
-from auth.router import router as auth_router
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -7,6 +6,8 @@ from sqlalchemy import text
 import os
 
 from db import get_db
+
+from auth.router import router as auth_router
 
 app = FastAPI(
     title="ERP MK RESURS API",
@@ -16,7 +17,7 @@ app = FastAPI(
 
 BASE_DIR = os.path.dirname(__file__)
 
-app.include_router(auth_router, prefix="/auth")
+app.include_router(auth_router)
 
 # Раздача статических файлов (папка static)
 app.mount("/static", StaticFiles(directory="static"), name="static")

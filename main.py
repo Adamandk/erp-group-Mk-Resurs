@@ -44,3 +44,10 @@ def serve_ui():
     file_path = os.path.join(BASE_DIR, "static", "index.html")
     with open(file_path, "r", encoding="utf-8") as f:
         return f.read()
+        
+@app.get("/ui/login", response_class=HTMLResponse)
+def login_page():
+    """Отдаём файл static/login.html (экран логина)."""
+    file_path = os.path.join(BASE_DIR, "static", "login.html")
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()

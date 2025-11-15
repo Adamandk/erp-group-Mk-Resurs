@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>ERP MK RESURS — Вход</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 24px 20px 28px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.7);
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+    label {
+      font-size: 13px;
+      color: #cbd5f5;
+      display: block;
+      margin-bottom: 4px;
+    }
+    input, select {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 9px;
+      border: 1px solid #1e293b;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 14px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+    input:focus, select:focus {
+      outline: 1px solid #4f46e5;
+      border-color: #4f46e5;
+    }
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .role-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .small {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .status {
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .status.ok { color: #4ade80; }
+    .status.err { color: #f97373; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ERP MK RESURS</h1>
+    <div class="subtitle">Черновой прототип входа в систему</div>
+
+    <form id="login-form">
+      <label for="email">Логин / e-mail</label>
+      <input id="email" type="email" placeholder="user@example.com" required />
+
+      <label for="password">Пароль</label>
+      <input id="password" type="password" placeholder="******" required />
+
+      <label for="role">Кто вы?</label>
+      <div class="role-row">
+        <select id="role">
+          <option value="client">Заказчик</option>
+          <option value="employee">Сотрудник</option>
+          <option value="subcontractor">Подрядчик</option>
+          <option value="brigadier">Бригадир</option>
+          <option value="project_manager">Рук. проекта</option>
+          <option value="supervisor">Супервайзер</option>
+          <option value="director">Директор</option>
+          <option value="admin">Админ</option>
+        </select>
+      </div>
+
+      <button type="submit">Войти (пока макет)</button>
+
+      <div class="small">
+        Сейчас это только прототип интерфейса.  
+        Никакие данные в БД не записываются.
+      </div>
+
+      <div id="status" class="status"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const statusEl = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "Пингую backend…";
+      statusEl.className = "status";
+
+      try {
+        const res = await fetch("/health/db");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        if (data.db === "ok") {
+          statusEl.textContent = "Backend и БД отвечают. Логика входа будет добавлена позже.";
+          statusEl.className = "status ok";
+        } else {
+          statusEl.textContent = "Backend ответил, но вернул неожиданное состояние.";
+          statusEl.className = "status err";
+        }
+      } catch (err) {
+        statusEl.textContent = "Не удалось связаться с backend: " + err.message;
+        statusEl.className = "status err";
+      }
+    });
+  </script>
+</body>
+</html>

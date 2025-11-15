@@ -1,6 +1,9 @@
 from fastapi import FastAPI, Depends
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+import os
 
 from db import get_db
 
@@ -9,6 +12,12 @@ app = FastAPI(
     description="Backend для ERP (проекты, заявки, смены, финансы)",
     version="0.1.0",
 )
+
+BASE_DIR = os.path.dirname(__file__)
+
+# Раздача статических файлов (папка static)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 @app.get("/")
 def read_root():
@@ -27,3 +36,11 @@ def health_db(db: Session = Depends(get_db)):
     """
     db.execute(text("SELECT 1"))
     return {"db": "ok"}
+
+
+@app.get("/ui", response_class=HTMLResponse)
+def serve_ui():
+    """Отдаём файл static/index.html как простую HTML-страницу."""
+    file_path = os.path.join(BASE_DIR, "static", "index.html")
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()

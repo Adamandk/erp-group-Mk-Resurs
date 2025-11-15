@@ -51,3 +51,18 @@ def authenticate_user(db: Session, email: str, password: str):
         "display_name": display_name or "",
         "my_company_id": my_company_id,
     }
+    # ==============================
+#  JWT Token Generator
+# ==============================
+SECRET_KEY = "MK_RESURS_SUPER_SECRET_KEY"   # потом вынесем в env
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
+
+
+def create_access_token(data: dict):
+    """Создаёт JWT токен для фронтенда"""
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

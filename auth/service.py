@@ -1,3 +1,10 @@
+from datetime import datetime, timedelta
+from jose import jwt
+from sqlalchemy import text
+from sqlalchemy.orm import Session   # ← ЭТО ОБЯЗАТЕЛЬНО
+
+from auth.utils import verify_password
+
 def authenticate_user(db: Session, email: str, password: str):
     sql = text("""
         SELECT 

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ERP MK Resurs — Login / Вход</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-gradient-start: #e3f2fd;
+      --bg-gradient-end: #bbdefb;
+      --card-bg: #ffffff;
+      --primary: #1565c0;
+      --primary-dark: #0d47a1;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #d1d5db;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.18);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top left, #ffffff, #e3f2fd 40%, #bbdefb);
+      color: var(--text-main);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 420px;
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 28px 24px 22px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(16px);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .app-name {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .card-subtitle span {
+      display: block;
+    }
+
+    form {
+      margin-top: 16px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+
+    .field-label span.ru {
+      color: #9ca3af;
+      margin-left: 4px;
+    }
+
+    .input,
+    .password-input {
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      font-size: 14px;
+      outline: none;
+      background: #f9fafb;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
+
+    .input:focus,
+    .password-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.05);
+    }
+
+    .password-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-input {
+      padding-right: 42px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 999px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-password:active {
+      background: rgba(148, 163, 184, 0.15);
+    }
+
+    .primary-btn {
+      width: 100%;
+      margin-top: 4px;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+      transition: transform 0.1s ease, box-shadow 0.1s ease,
+        filter 0.1s ease;
+    }
+
+    .primary-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+      filter: brightness(0.97);
+    }
+
+    .links-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .link {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 420px) {
+      .card {
+        padding: 24px 18px 18px;
+      }
+      .card-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div class="card-header">
+        <div class="app-name">ERP MK RESURS</div>
+        <div class="card-title">Login / Вход</div>
+        <div class="card-subtitle">
+          <span>Sign in to your workspace</span>
+          <span>Войдите в рабочую панель</span>
+        </div>
+      </div>
+
+      <form id="login-form">
+        <!-- Username -->
+        <div class="field">
+          <div class="field-label">
+            Username<span class="ru">/ Логин</span>
+          </div>
+          <input
+            class="input"
+            type="text"
+            id="username"
+            name="username"
+            autocomplete="username"
+            placeholder="user@example.com"
+            required
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <div class="field-label">
+            Password<span class="ru">/ Пароль</span>
+          </div>
+          <div class="password-row">
+            <input
+              class="password-input"
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              required
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              aria-label="Show / hide password"
+              id="togglePassword"
+            >
+              👁
+            </button>
+          </div>
+        </div>
+
+        <!-- Login button -->
+        <button type="submit" class="primary-btn">
+          Login / Войти
+        </button>
+
+        <!-- Links -->
+        <div class="links-row">
+          <a href="#" class="link">Forgot password? / Забыли пароль?</a>
+          <a href="#" class="link">Register / Регистрация</a>
+        </div>
+      </form>
+
+      <div class="footer-note">
+        Форма пока работает как прототип интерфейса.<br />
+        Позже мы свяжем её с API авторизации и ролями (director, employee,
+        client и т.д.).
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Показ / скрытие пароля
+    const passwordInput = document.getElementById("password");
+    const toggleBtn = document.getElementById("togglePassword");
+
+    toggleBtn.addEventListener("click", () => {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      toggleBtn.textContent = isPassword ? "🙈" : "👁";
+    });
+
+    // Пока просто глушим отправку формы
+    document
+      .getElementById("login-form")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert(
+          "Здесь позже будет реальный вход через API.\nПока это только макет экрана логина."
+        );
+      });
+  </script>
+</body>
+</html>

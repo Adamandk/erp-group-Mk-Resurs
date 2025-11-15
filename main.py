@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from auth.router import router as auth_router
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -14,6 +15,8 @@ app = FastAPI(
 )
 
 BASE_DIR = os.path.dirname(__file__)
+
+app.include_router(auth_router, prefix="/auth")
 
 # Раздача статических файлов (папка static)
 app.mount("/static", StaticFiles(directory="static"), name="static")

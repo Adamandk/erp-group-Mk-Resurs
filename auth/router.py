@@ -5,20 +5,22 @@ from db import get_db
 from auth.schemas import LoginRequest, LoginResponse
 from auth.service import authenticate_user, create_access_token
 
-
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/login", response_model=LoginResponse)
 def login(data: LoginRequest, db: Session = Depends(get_db)):
+
     user = authenticate_user(db, data.email, data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
 
+    # JWT токен
     token = create_access_token({
         "identity_id": user["identity_id"],
         "party_id": user["party_id"],
         "role_code": user["role_code"],
+        "my_company_id": user.get("my_company_id"),
     })
 
     return LoginResponse(
@@ -26,4 +28,6 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
         party_id=user["party_id"],
         identity_id=user["identity_id"],
         role_code=user["role_code"],
+        my_company_id=user.get("my_company_id"),
+        display_name=user["display_name"],
     )
